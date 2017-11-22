@@ -3,12 +3,6 @@ import os
 
 
 
-
-
-
-
-
-
 def open_path(path):
     """
     :param path:
@@ -79,6 +73,15 @@ def clean_lines(vm_lines):
         new_lines.append(line)
 
     return new_lines
+
+
+
+
+
+
+
+
+
 
 
 
