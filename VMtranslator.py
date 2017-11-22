@@ -77,8 +77,12 @@ def clean_lines(vm_lines):
 
 
 
-
-
+def create_asm_file(asm_path, vm):
+    #object file constractor
+    #asm_file = open(asm_path, "w")
+    #translate(vm)
+    #asm_file.close()
+    return vm
 
 
 
