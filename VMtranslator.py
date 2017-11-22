@@ -77,12 +77,3 @@ def clean_lines(vm_lines):
 
 
 
-
-
-
-
-
-
-
-
-
