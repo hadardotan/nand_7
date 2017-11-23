@@ -102,6 +102,7 @@ def line_lst_2_str(line):
         str += "\n"
     return str
 
+
 def vm_to_asm(file, i):
     """
     translates vm line to asm code
