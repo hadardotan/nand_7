@@ -13,15 +13,15 @@ def main(path):
     else:
         for file in os.listdir(path):
             if os.path.isfile(path + file):
-                if (str(file).split('.')[-1] == "vm"):
+                if str(file).split('.')[-1] == "vm":
                     files.append(str(path + file))
     for f in files:
-        vm_lines = Parser.read_vm_file(f)
-        file_name = re.sub(r'(\.vm)$', '', f)
-        asm_file_name = file_name + ".asm"
-        CodeWriter.create_asm_file(asm_file_name, vm_lines)
-
-
+        file = VMtranslator.File(Parser.read_vm_file(f),
+                                 Parser.get_asm_file_name(f))
+        asm_file = open(file.get_asm_file_name(), "w+")
+        for i in range(file.get_num_of_lines()):
+            asm_file.write(VMtranslator.vm_to_asm(file, i))
+        asm_file.close()
 
 ####################################################################
 

@@ -23,41 +23,10 @@ POINTER = "pointer"
 STATIC = "static"
 CONST = "constant"
 
-class File:
-    """
-    handles the parsing of single .vm file
-    reads vm commands, parse it into lexical components and provides convenient
-    access to these components
-    ingnores all whitespaces and comments
-    """
-
-
-
-    def __init__(self, input_file):
-        """
-        opens the input file and gets ready to parse it
-        :param input_file:
-        """
-        self.input_file = input_file
-        self.output_file = []
 
 
 
 
-    def translate_arithmetic(self, id):
-        """
-        :param id: id of line in input_file that contains arithmetic command
-        :return: vm translated line
-        """
-
-
-    def translate_command(self, id):
-        """
-
-        :param id: id of line in input_file that contains push,pop,function
-         or call command
-        :return: vm translated line
-        """
 
 
 
