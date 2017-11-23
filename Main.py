@@ -31,6 +31,7 @@ def main(path):
 
 ####################################################################
 
+
 def open_path(path):
     files = {}
     if os.path.isdir(path):

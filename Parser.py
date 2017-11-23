@@ -1,26 +1,6 @@
 import math
 import os
 
-def open_path(path):
-    """
-    :param path:
-    :return:
-    """
-    files = {}
-    if os.path.isdir(path):
-        dir = os.listdir(path)
-        for ob in dir:
-            if (not os.path.isdir(ob)) and (
-            os.path.basename(ob).endswith(".vm")):
-                name = os.path.basename(ob)
-                vm_lines = read_vm_file(path + "\\" + name)
-                files[name] = vm_lines
-        return files, path
-    else:
-        name = os.path.basename(path)
-        vm_lines = read_vm_file(path)
-        files[name] = vm_lines
-    return files, os.path.dirname(path)
 
 def read_vm_file(file_path):
     """

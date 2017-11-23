@@ -17,16 +17,14 @@ def clean_lines(vm_lines):
         new_lines.append(line)
     return new_lines
 
-
 def create_asm_file(asm_file_name, vm_lines):
-    variable_counter = 16
-    temp_counter = 5
+    # variable_counter = 16
+    # temp_counter = 5
     asm_file = open(asm_file_name, "w+")
     vm_lines = clean_lines(vm_lines)
     for vm_line in vm_lines:
-        #asm_file.write(vm_to_asm(vm_line))
-        VMtranslator.vm_to_asm(vm_line)
-    #asm_file.close()
+        asm_file.write(VMtranslator.vm_to_asm(vm_line))
+    asm_file.close()
 
 
 
