@@ -25,7 +25,7 @@ class File(object):
         self.vm_lines = Parser.path_to_lines(self.vm_path)
         self.asm_path = re.sub(r'(\.vm)$', '', self.vm_path) + ".asm"
         self.file_name = (re.split('(\w+)', self.vm_path))[-4]
-        self.counter = 0
+        self.lables_counter = 0
 
     def translate(self):
         asm_file = open(self.asm_path, "w+")
@@ -267,29 +267,102 @@ class File(object):
 
 
     def eq_command(self):
+        # line = ["// eq"]
+        # line.append("@SP")
+        # line.append("AM=M-1")
+        # line.append("D=M")
+        # line.append("A=A-1")
+        # line.append("D=M-D")
+        # line.append("@FALSE" + str(self.lables_counter))
+        # self.lables_counter += 1
+        # line.append("D;JNE")
+        # line.append("@SP")
+        # line.append("A=M-1")
+        # line.append("M=-1")
+        # line.append("@CONTINUE" + str(self.lables_counter))
+        # self.lables_counter += 1
+        # line.append("0;JMP")
+        # line.append("(FALSE" + str(self.lables_counter) + ")")
+        # line.append("@SP")
+        # line.append("A=M-1")
+        # line.append("M=0")
+        # line.append("(CONTINUE" + str(self.lables_counter) + ")")
+        # return Parser.line_lst_2_str(line)
+
+
         line = ["// eq"]
+        eq = "EQUAL"+ str(self.lables_counter)
+        self.lables_counter += 1
+        noteq ="NOTEQUAL"+ str(self.lables_counter)
+        self.lables_counter += 1
+        endeq = "ENDQUAL" + str(self.lables_counter)
+        self.lables_counter += 1
+
         line.append("@SP")
         line.append("AM=M-1")
         line.append("D=M")
         line.append("A=A-1")
         line.append("D=M-D")
-        line.append("@FALSE"+str(self.counter))
-        line.append("D;JNE")
+
+        line.append("@"+eq)
+        line.append("D;JEQ")   # if D==0 go to (EQUAL)
+
+        line.append("@" + noteq)
+        line.append("D;JNE")    # if D!=0 go to (NOTEQUAL)
+
+        line.append("(" + eq + ")")
         line.append("@SP")
         line.append("A=M-1")
-        line.append("M=-1")
-        line.append("@CONTINUE"+str(self.counter))
-        line.append("0;JMP")
-        line.append("(FALSE"+str(self.counter)+")")
+        line.append("M=-1")   # equal true (111111111)
+
+        line.append("@" + endeq)
+        line.append("0;JMP")    # go to end
+        line.append("(" + noteq + ")")
         line.append("@SP")
         line.append("A=M-1")
-        line.append("M=0")
-        line.append("(CONTINUE"+str(self.counter)+")")
-        self.counter +=1
+        line.append("M=0")  # not equal 0 false  (0000000000)
+        line.append("@" + endeq)
+        line.append("0;JMP")    # go to end
+        line.append("(" + endeq + ")")
         return Parser.line_lst_2_str(line)
 
 
+    def lt_command(self):
+        line = ["// eq"]
+        eq = "EQUAL" + str(self.lables_counter)
+        self.lables_counter += 1
+        noteq = "NOTEQUAL" + str(self.lables_counter)
+        self.lables_counter += 1
+        endeq = "ENDQUAL" + str(self.lables_counter)
+        self.lables_counter += 1
 
+        line.append("@SP")
+        line.append("AM=M-1")
+        line.append("D=M")
+        line.append("A=A-1")
+        line.append("D=M-D")
+
+        line.append("@" + eq)
+        line.append("D;JEQ")  # if D==0 go to (EQUAL)
+
+        line.append("@" + noteq)
+        line.append("D;JNE")  # if D!=0 go to (NOTEQUAL)
+
+        line.append("(" + eq + ")")
+        line.append("@SP")
+        line.append("A=M-1")
+        line.append("M=-1")  # equal true (111111111)
+
+        line.append("@" + endeq)
+        line.append("0;JMP")  # go to end
+        line.append("(" + noteq + ")")
+        line.append("@SP")
+        line.append("A=M-1")
+        line.append("M=0")  # not equal 0 false  (0000000000)
+        line.append("@" + endeq)
+        line.append("0;JMP")  # go to end
+        line.append("(" + endeq + ")")
+        return Parser.line_lst_2_str(line)
 
 
 
