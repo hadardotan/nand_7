@@ -1,58 +1,38 @@
 import sys
 import os
-import VMtranslator
-import re
-import CodeWriter
-import Parser
-
+import file_object
 
 def main(path):
+    """
+    This fucntion classify the two options: .hack file path or directory path.
+    This function calls the 'read_asm_file' and 'create_hack_file' function.
+    """
     files = []
     if path[-1] != '\\' and path[-1] != '/':
         files.append(path)
     else:
-        for file in os.listdir(path):
-            if os.path.isfile(path + file):
-                if str(file).split('.')[-1] == "vm":
-                    files.append(str(path + file))
-    for f in files:
-        file = VMtranslator.File(Parser.read_vm_file(f),
-                                 Parser.get_asm_file_name(f))
-        asm_file = open(file.get_asm_file_name(), "w+")
-        for i in range(file.get_num_of_lines()):
-            asm_file.write(VMtranslator.vm_to_asm(file, i))
-        asm_file.close()
+        for f in os.listdir(path):
+            if os.path.isfile(path+f):
+                if (str(f).split('.')[-1] == "asm"):
+                    files.append(str(path+f))
 
-####################################################################
+    for file_path in files:
+        File = file_object.File(file_path)
+        File.translate()
+
 
 # if __name__ == "__main__":
 #     if len(sys.argv) == 2:
 #         main(sys.argv[1])
 
-####################################################################
+#basic_test = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\MemoryAccess\BasicTest\BasicTest.vm"
+#static = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\MemoryAccess\StaticTest\StaticTest.vm"
+# simple_add = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\StackArithmetic\SimpleAdd\SimpleAdd.vm"
+#point = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\MemoryAccess\PointerTest\PointerTest.vm"
+stack_test = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\StackArithmetic\StackTest\StackTest.vm"
 
 
-def open_path(path):
-    files = {}
-    if os.path.isdir(path):
-        dir = os.listdir(path)
-        for ob in dir:
-            if (not os.path.isdir(ob)) and (
-            os.path.basename(ob).endswith(".vm")):
-                name = os.path.basename(ob)
-                vm_lines = Parser.read_vm_file(path + "\\" + name)
-                files[name] = vm_lines
-        return files, path
-    else:
-        name = os.path.basename(path)
-        asm_lines = Parser.read_vm_file(path)
-        files[name] = asm_lines
-    return files, os.path.dirname(path)
-example_path = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\example folder"
-files, folder_path = open_path(example_path)
-for key in files.keys():
-    name = key[:-4] + ".asm"
-    asm_path = folder_path + "\\" + name
-    CodeWriter.create_asm_file(asm_path,files[key])
+main(stack_test)
 
-####################################################################
+
+
