@@ -25,13 +25,17 @@ def main(path):
 #     if len(sys.argv) == 2:
 #         main(sys.argv[1])
 
-#basic_test = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\MemoryAccess\BasicTest\BasicTest.vm"
-#static = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\MemoryAccess\StaticTest\StaticTest.vm"
-# simple_add = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\StackArithmetic\SimpleAdd\SimpleAdd.vm"
-#point = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\MemoryAccess\PointerTest\PointerTest.vm"
+basic_test = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\MemoryAccess\BasicTest\BasicTest.vm"
+static = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\MemoryAccess\StaticTest\StaticTest.vm"
+simple_add = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\StackArithmetic\SimpleAdd\SimpleAdd.vm"
+point = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\MemoryAccess\PointerTest\PointerTest.vm"
 stack_test = r"C:\Users\mika\Desktop\nand2tetris\nand2tetris\projects\07\StackArithmetic\StackTest\StackTest.vm"
 
 
+main(basic_test)
+main(static)
+main(simple_add)
+main(point)
 main(stack_test)
 
 

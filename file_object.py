@@ -59,7 +59,6 @@ class File(object):
         if segment == 'static':
             return self.static_command(command, i)
 
-
     def this_that_command(self, command , segment , i):
         line = ["// " + command + " " + segment + " " + i]
         #line =[]
@@ -250,10 +249,13 @@ class File(object):
         if command == "or":
             operator = "|"
         line.append("@SP")
-        line.append("AM=M-1")
+        line.append("A=M-1")
         line.append("D=M")
         line.append("A=A-1")
-        line.append("A=M"+operator+"D")
+        line.append("M=M"+operator+"D")
+        line.append("D=A+1")
+        line.append("@SP")
+        line.append("M=D")
         return Parser.line_lst_2_str(line)
 
     def ram_for_segment(self, segment):
@@ -270,183 +272,106 @@ class File(object):
         if segment == 'static':
             return Static
 
+
     def eq_command(self):
-        # line = ["// eq"]
-        # line.append("@SP")
-        # line.append("AM=M-1")
-        # line.append("D=M")
-        # line.append("A=A-1")
-        # line.append("D=M-D")
-        # line.append("@FALSE" + str(self.lables_counter))
-        # self.lables_counter += 1
-        # line.append("D;JNE")
-        # line.append("@SP")
-        # line.append("A=M-1")
-        # line.append("M=-1")
-        # line.append("@CONTINUE" + str(self.lables_counter))
-        # self.lables_counter += 1
-        # line.append("0;JMP")
-        # line.append("(FALSE" + str(self.lables_counter) + ")")
-        # line.append("@SP")
-        # line.append("A=M-1")
-        # line.append("M=0")
-        # line.append("(CONTINUE" + str(self.lables_counter) + ")")
-        # return Parser.line_lst_2_str(line)
         line = ["// eq"]
-        eq = "EQUAL"+ str(self.lables_counter)
-        self.lables_counter += 1
-        noteq ="NOTEQUAL"+ str(self.lables_counter)
-        self.lables_counter += 1
-        endeq = "ENDQUAL" + str(self.lables_counter)
-        self.lables_counter += 1
-
-        line.append("@SP")
-        line.append("AM=M-1")
-        line.append("D=M")
-        line.append("A=A-1")
-        line.append("D=M-D")
-
-        line.append("@"+eq)
-        line.append("D;JEQ")   # if D==0 go to (EQUAL)
-
-        line.append("@" + noteq)
-        line.append("D;JNE")    # if D!=0 go to (NOTEQUAL)
-
-        line.append("(" + eq + ")")
-        line.append("@SP")
-        line.append("A=M-1")
-        line.append("M=-1")   # equal true (111111111)
-
-        line.append("@" + endeq)
-        line.append("0;JMP")    # go to end
-        line.append("(" + noteq + ")")
-        line.append("@SP")
-        line.append("A=M-1")
-        line.append("M=0")  # not equal 0 false  (0000000000)
-        line.append("@" + endeq)
-        line.append("0;JMP")    # go to end
-        line.append("(" + endeq + ")")
+        eq = "EQ_"+ str(self.lables_counter)
+        at_eq = "AFTER_JEQ_"+ str(self.lables_counter)
+        self.lables_counter +=1
+        line +=[
+        '@SP',
+        'M=M-1',
+        'A=M',
+        'D=M',
+        '@R13',
+        'M=D',
+        '@SP',
+        'M=M-1',
+        'A=M',
+        'D=M-D',
+        '@'+eq,
+        'D;JEQ',
+        '@SP',
+        'A=M',
+        'M=0',
+        '@'+at_eq,
+        '0;JMP',
+        '('+eq+')',
+        '@SP',
+        'A=M',
+        'M=-1',
+        '@'+at_eq,
+        '0;JMP',
+        '('+at_eq+')',
+        '@SP',
+        'M=M+1']
         return Parser.line_lst_2_str(line)
 
     def lt_command(self):
-        line = ["// lt"]
-        lower = "LOWER" + str(self.lables_counter)
-        self.lables_counter += 1
-        notlower = "NOTLOWER" + str(self.lables_counter)
-        self.lables_counter += 1
-        endlower = "ENDLOWER" + str(self.lables_counter)
-        self.lables_counter += 1
-
-        line.append("@SP")
-        line.append("AM=M-1")
-        line.append("D=M")
-        line.append("A=A-1")
-        line.append("D=M-D")
-
-        line.append("@" + lower)
-        line.append("D;JLT")  # if D < 0 go to (LOWER)
-
-        line.append("@" + notlower)
-        line.append("D;JNE")  # if D >= 0 go to (NOTLOWER)
-
-        line.append("(" + lower + ")")
-        line.append("@SP")
-        line.append("A=M-1")
-        line.append("M=-1")  # lower true (111111111)
-
-        line.append("@" + endlower)
-        line.append("0;JMP")  # go to end
-        line.append("(" + notlower + ")")
-        line.append("@SP")
-        line.append("A=M-1")
-        line.append("M=0")  # lower 0 false  (0000000000)
-
-        line.append("@" + endlower)
-        line.append("0;JMP")  # go to end
-        line.append("(" + endlower + ")")
-
-        """
-        @SP
-        AM=M-1
-        D=M
-        A=A-1
-        D=M-D
-        @FALSE3
-        D;JGE
-        @SP
-        A=M-1
-        M=-1
-        @CONTINUE3
-        0;JMP
-        (FALSE3)
-        @SP
-        A=M-1
-        M=0
-        (CONTINUE3)
-        """
+        line = ["// eq"]
+        lower = "LOWER_"+ str(self.lables_counter)
+        after_lower = "AFTER_LOWER_"+ str(self.lables_counter)
+        self.lables_counter +=1
+        line +=[
+        '@SP',
+        'M=M-1',
+        'A=M',
+        'D=M',
+        '@R13',
+        'M=D',
+        '@SP',
+        'M=M-1',
+        'A=M',
+        'D=M-D',
+        '@'+lower,
+        'D;JLT',
+        '@SP',
+        'A=M',
+        'M=0',
+        '@'+after_lower,
+        '0;JMP',
+        '('+lower+')',
+        '@SP',
+        'A=M',
+        'M=-1',
+        '@'+after_lower,
+        '0;JMP',
+        '('+after_lower+')',
+        '@SP',
+        'M=M+1']
         return Parser.line_lst_2_str(line)
 
     def gt_command(self):
-        line = ["// gt"]
-        greater = "GREATER" + str(self.lables_counter)
-        self.lables_counter += 1
-        notgreater = "NOTGREATER" + str(self.lables_counter)
-        self.lables_counter += 1
-        endgreater = "ENDGREATER" + str(self.lables_counter)
-        self.lables_counter += 1
-
-        line.append("@SP")
-        line.append("AM=M-1")
-        line.append("D=M")
-        line.append("A=A-1")
-        line.append("D=M-D")
-
-        line.append("@" + greater)
-        line.append("D;JGT")  # if D > 0 go to (GREATER)
-
-        line.append("@" + notgreater)
-        line.append("D;JLE")  # if D <= 0 go to (NOTGREATER)
-
-        line.append("(" + greater + ")")
-        line.append("@SP")
-        line.append("A=M-1")
-        line.append("M=-1")  # greater true (111111111)
-
-        line.append("@" + endgreater)
-        line.append("0;JMP")  # go to end
-
-        line.append("(" + notgreater + ")")
-        line.append("@SP")
-        line.append("A=M-1")
-        line.append("M=0")  # greater false  (0000000000)
-
-        line.append("@" + endgreater)
-        line.append("0;JMP")  # go to end
-        line.append("(" + endgreater + ")")
-
-        """
-        @SP
-        AM=M-1
-        D=M
-        A=A-1
-        D=M-D
-        @FALSE3
-        D;JGE
-        @SP
-        A=M-1
-        M=-1
-        @CONTINUE3
-        0;JMP
-        (FALSE3)
-        @SP
-        A=M-1
-        M=0
-        (CONTINUE3)
-        """
+        line = ["// eq"]
+        greater = "GREAT"+ str(self.lables_counter)
+        after_greater = "AFTER_GREAT_"+ str(self.lables_counter)
+        self.lables_counter +=1
+        line +=[
+        '@SP',
+        'M=M-1',
+        'A=M',
+        'D=M',
+        '@R13',
+        'M=D',
+        '@SP',
+        'M=M-1',
+        'A=M',
+        'D=M-D',
+        '@'+greater,
+        'D;JGT',
+        '@SP',
+        'A=M',
+        'M=0',
+        '@'+after_greater,
+        '0;JMP',
+        '('+greater+')',
+        '@SP',
+        'A=M',
+        'M=-1',
+        '@'+after_greater,
+        '0;JMP',
+        '('+after_greater+')',
+        '@SP',
+        'M=M+1']
         return Parser.line_lst_2_str(line)
-
-
-
-
-
 
