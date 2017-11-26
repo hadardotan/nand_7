@@ -8,11 +8,22 @@ Hadar Dotan, ID 311337380, hadar.dotan@mail.huji.ac.il
 Project 7: Virtual Machine I - Stack Arithmetic
 -----------------------------------------------
 
+This project generates basic VM translator, focusing on the implementation of
+the VM language's stack arithmetic and memory access commands.
+The VM translator to translate given VM files and yielding corresponding
+ programs written in the Hack assembly language.
 
+We chose to implement the translator using Object Oriented Programming.
+We created an Object called File that handles the parsing of single .vm file.
+It reads vm commands, parse it into lexical components and provides convenient
+access to these components.
 
 Submitted files :
 -----------------
 README
+Main.py
+Parser.py
+File.py
 
 
 
