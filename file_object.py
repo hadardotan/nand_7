@@ -61,7 +61,6 @@ class File(object):
 
     def this_that_command(self, command , segment , i):
         line = ["// " + command + " " + segment + " " + i]
-        #line =[]
         ram = That
         if segment == 'this':
             ram = This
@@ -234,13 +233,8 @@ class File(object):
             line.append("A=M-1")
             line.append("M=!M")
             return Parser.line_lst_2_str(line)
-        if command == "eq":
-            return self.eq_command()
-        if command == "lt":
-            return self.lt_command()
-        if command == "gt":
-            return self.gt_command()
-        # if command in [add,sub,and,or]:
+        if command in ["eq","lt","gt"]:
+            return self.compare_command(command)
         operator = "+"
         if command == "sub":
             operator = "-"
@@ -272,11 +266,16 @@ class File(object):
         if segment == 'static':
             return Static
 
+    def compare_command(self, command):
+        line = ["// "+command]
+        true = command.upper() + str(self.lables_counter)
+        end = "END" + str(self.lables_counter)
+        condition = "JEQ"
+        if command == "gt":
+            condition = "JGT"
+        if command == "lt":
+            condition = "JLT"
 
-    def eq_command(self):
-        line = ["// eq"]
-        eq = "EQ_"+ str(self.lables_counter)
-        at_eq = "AFTER_JEQ_"+ str(self.lables_counter)
         self.lables_counter +=1
         line +=[
         '@SP',
@@ -289,89 +288,20 @@ class File(object):
         'M=M-1',
         'A=M',
         'D=M-D',
-        '@'+eq,
-        'D;JEQ',
+        '@'+true,
+        'D;'+condition,
         '@SP',
         'A=M',
         'M=0',
-        '@'+at_eq,
+        '@'+end,
         '0;JMP',
-        '('+eq+')',
+        '('+true+')',
         '@SP',
         'A=M',
         'M=-1',
-        '@'+at_eq,
+        '@'+end,
         '0;JMP',
-        '('+at_eq+')',
+        '('+end+')',
         '@SP',
         'M=M+1']
         return Parser.line_lst_2_str(line)
-
-    def lt_command(self):
-        line = ["// eq"]
-        lower = "LOWER_"+ str(self.lables_counter)
-        after_lower = "AFTER_LOWER_"+ str(self.lables_counter)
-        self.lables_counter +=1
-        line +=[
-        '@SP',
-        'M=M-1',
-        'A=M',
-        'D=M',
-        '@R13',
-        'M=D',
-        '@SP',
-        'M=M-1',
-        'A=M',
-        'D=M-D',
-        '@'+lower,
-        'D;JLT',
-        '@SP',
-        'A=M',
-        'M=0',
-        '@'+after_lower,
-        '0;JMP',
-        '('+lower+')',
-        '@SP',
-        'A=M',
-        'M=-1',
-        '@'+after_lower,
-        '0;JMP',
-        '('+after_lower+')',
-        '@SP',
-        'M=M+1']
-        return Parser.line_lst_2_str(line)
-
-    def gt_command(self):
-        line = ["// eq"]
-        greater = "GREAT"+ str(self.lables_counter)
-        after_greater = "AFTER_GREAT_"+ str(self.lables_counter)
-        self.lables_counter +=1
-        line +=[
-        '@SP',
-        'M=M-1',
-        'A=M',
-        'D=M',
-        '@R13',
-        'M=D',
-        '@SP',
-        'M=M-1',
-        'A=M',
-        'D=M-D',
-        '@'+greater,
-        'D;JGT',
-        '@SP',
-        'A=M',
-        'M=0',
-        '@'+after_greater,
-        '0;JMP',
-        '('+greater+')',
-        '@SP',
-        'A=M',
-        'M=-1',
-        '@'+after_greater,
-        '0;JMP',
-        '('+after_greater+')',
-        '@SP',
-        'M=M+1']
-        return Parser.line_lst_2_str(line)
-
